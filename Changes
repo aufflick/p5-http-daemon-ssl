@@ -1,4 +1,4 @@
-v1.02_01
+v1.03_01
     - First release by Mark Aufflick <mark@aufflick.com>
     - Fixes problem where accep() will never timeout
       http://rt.cpan.org/Ticket/Display.html?id=28417
