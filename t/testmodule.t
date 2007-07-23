@@ -7,7 +7,7 @@ use HTTP::Status;
 eval {require "t/ssl_settings.req";} ||
 eval {require "ssl_settings.req";};
 
-$numtests = 8;
+$numtests = 9;
 $|=1;
 $SIG{PIPE}='IGNORE';
 
@@ -73,24 +73,30 @@ print "not " if (!defined fileno($server));
 print "not " unless ($server->url =~ m!^https:!);
 &ok("server url test");
 
-my $client = $server->accept;
-
-if (!$client) {
-    print "not ok # no client\n";
-    exit;
+my $conn;
+if (!($conn = $server->accept)) {
+    # first client request is a bad request
+    &ok("bad request handled");
+} else {
+    print "not ok $test # bad request returned a socket\n";
 }
-&ok("server accept");
 
-my $r = $client->get_request();
+if ($conn = $server->accept) {
+    &ok("valid request handled");
+} else {
+    print "not ok $test # valid request did not return a socket\n";
+}
+
+my $r = $conn->get_request();
 
 unless ($r->method eq 'GET' and $r->url->path eq '/foo') {
     print "not ";
 }
 &ok("server method processing");
 
-$client->send_error(RC_FORBIDDEN);
+$conn->send_error(RC_FORBIDDEN);
 
-close $client;
+close $conn;
 wait;
 
 sub ok {

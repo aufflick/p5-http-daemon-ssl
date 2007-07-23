@@ -71,7 +71,7 @@ use vars qw($VERSION @ISA $PROTO $DEBUG);
 use IO::Socket::SSL;
 use HTTP::Daemon;
 
-$VERSION = "1.02";
+$VERSION = "1.02_01";
 @ISA = qw(IO::Socket::SSL HTTP::Daemon);
 
 =item $d = new HTTP::Daemon::SSL
@@ -105,10 +105,13 @@ sub accept
 {
     my $self = shift;
     my $pkg = shift || "HTTP::Daemon::ClientConn::SSL";
-    while (1) {
-	my $sock = IO::Socket::SSL::accept($self,$pkg);
-	${*$sock}{'httpd_daemon'} = $self if ($sock);
-	return $sock if ($sock || $self->errstr =~ /^IO::Socket[^\n]* accept failed$/);
+	my ($sock, $peer) = IO::Socket::SSL::accept($self,$pkg);
+    if ($sock) {
+        ${*$sock}{'httpd_daemon'} = $self;
+        return wantarray ? ($sock, $peer) : $sock;
+    }
+    else {
+        return;
     }
 }
 
