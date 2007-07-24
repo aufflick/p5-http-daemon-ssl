@@ -1,8 +1,10 @@
 Quick note:
 
 I have just taken over maintenance of HTTP::Daemon::SSL. This
-developer release fixes a bug relating to accept() not timing out
-( http://rt.cpan.org/Ticket/Display.html?id=28417  ).
+developer release fixes (hopefully) various bugs:
+ * http://rt.cpan.org/Ticket/Display.html?id=28417
+ * http://rt.cpan.org/Ticket/Display.html?id=21395
+ * http://rt.cpan.org/Ticket/Display.html?id=15470
 
 The todo list, in no particular order, is:
 
@@ -11,8 +13,6 @@ The todo list, in no particular order, is:
  * improve test cases
  * update docs to reflect changes (include example of how to fix any
    code relying on the old behaviour).
- * fix remaining bugs lodged in rt.cpan.org:
-   http://rt.cpan.org/Dist/Display.html?Queue=HTTP-Daemon-SSL
 
 Mark Aufflick, <mark@aufflick.com>
 

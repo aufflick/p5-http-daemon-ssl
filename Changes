@@ -1,3 +1,9 @@
+v1.03_02
+    - removes unnecessary _need_more
+    - which, by side effect, fixes two outstanding bugs:
+      http://rt.cpan.org/Ticket/Display.html?id=21395
+      http://rt.cpan.org/Ticket/Display.html?id=15470
+
 v1.03_01
     - First release by Mark Aufflick <mark@aufflick.com>
     - Fixes problem where accep() will never timeout
