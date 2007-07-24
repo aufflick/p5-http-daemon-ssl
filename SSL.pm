@@ -151,39 +151,14 @@ sub ssl_error {
     $self->kill_socket;
 }
 
+# we're not overriding any methods here, but we are inserting IO::Socket::SSL
+# into the message dispatch tree
 
 package HTTP::Daemon::ClientConn::SSL;
 use vars qw(@ISA $DEBUG);
 @ISA = qw(IO::Socket::SSL HTTP::Daemon::ClientConn);
 *DEBUG = \$HTTP::Daemon::DEBUG;
 
-sub _need_more
-{
-    my $self = shift;
-    if ($_[1]) {
-        my($timeout, $fdset) = @_[1,2];
-        print STDERR "select(,,,$timeout)\n" if $DEBUG;
-        my $n = select($fdset,undef,undef,$timeout);
-        unless ($n) {
-            $self->reason(defined($n) ? "Timeout" : "select: $!");
-            return;
-        }
-    }
-    my $total = 0;
-    while (1){
-        print STDERR sprintf("sysread() already %d\n",$total) if $DEBUG;
-        my $n = sysread($self, $_[0], 2048, length($_[0]));
-        print STDERR sprintf("sysread() just \$n=%s\n",(defined $n?$n:'undef')) if $DEBUG;
-        $total += $n if defined $n;
-        last if $! =~ 'Resource temporarily unavailable';
-            #SSL_Error because of aggressive reading
-
-        $self->reason(defined($n) ? "Client closed" : "sysread: $!") unless $n;
-        last unless $n;
-        last unless $n == 2048;
-    }
-    $total;
-}
 
 =head1 SEE ALSO
 
