@@ -22,8 +22,32 @@ print "1..$numtests\n";
 
 $test = 0;
 
+my $server = new HTTP::Daemon::SSL(
+				   LocalAddr => $SSL_SERVER_ADDR,
+				   Listen => 5,
+				   Timeout => 30,
+				   ReuseAddr => 1,
+				   SSL_verify_mode => 0x00,
+				   SSL_ca_file => "certs/test-ca.pem",
+				   SSL_cert_file => "certs/server-cert.pem");
+
+if (!$server) {
+    print "not ok $test\n";
+    exit;
+}
+$SSL_SERVER_PORT = $server->sockport;
+&ok("server init port=$SSL_SERVER_PORT");
+
+
+print "not " if (!defined fileno($server));
+&ok("server fileno");
+
+print "not " unless ($server->url =~ m!^https:!);
+&ok("server url test");
+
+
 unless (fork) {
-    sleep 1;
+    close($server);
 
     my $client = new IO::Socket::INET(PeerAddr => $SSL_SERVER_ADDR,
 				      PeerPort => $SSL_SERVER_PORT);
@@ -51,27 +75,6 @@ unless (fork) {
     exit(0);
 }
 
-
-my $server = new HTTP::Daemon::SSL(LocalPort => $SSL_SERVER_PORT,
-				   LocalAddr => $SSL_SERVER_ADDR,
-				   Listen => 5,
-				   Timeout => 30,
-				   ReuseAddr => 1,
-				   SSL_verify_mode => 0x00,
-				   SSL_ca_file => "certs/test-ca.pem",
-				   SSL_cert_file => "certs/server-cert.pem");
-
-if (!$server) {
-    print "not ok $test\n";
-    exit;
-}
-&ok("server init");
-
-print "not " if (!defined fileno($server));
-&ok("server fileno");
-
-print "not " unless ($server->url =~ m!^https:!);
-&ok("server url test");
 
 my $conn;
 if (!($conn = $server->accept)) {
