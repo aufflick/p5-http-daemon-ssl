@@ -46,7 +46,8 @@ available.  In a scalar context the returned value will be a reference
 to a object of the I<HTTP::Daemon::ClientConn::SSL> class which is another
 I<IO::Socket::SSL> subclass.  In a list context a two-element array
 is returned containing the new I<HTTP::Daemon::ClientConn::SSL> reference
-and the peer address; the list will be empty upon failure.  Calling
+and the peer address; the list will be empty upon failure. (Note that version
+ 1.02 erroneously did not honour list context). Calling
 the get_request() method on the I<HTTP::Daemon::ClientConn::SSL> object
 will read data from the client and return an I<HTTP::Request> object
 reference.
@@ -71,7 +72,7 @@ use vars qw($VERSION @ISA $PROTO $DEBUG);
 use IO::Socket::SSL;
 use HTTP::Daemon;
 
-$VERSION = "1.03_02";
+$VERSION = "1.04";
 @ISA = qw(IO::Socket::SSL HTTP::Daemon);
 
 =item $d = new HTTP::Daemon::SSL

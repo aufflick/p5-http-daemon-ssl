@@ -1,3 +1,7 @@
+v1.04
+    - production release
+    - only documentation and text file changes from 1.03_02
+
 v1.03_02
     - removes unnecessary _need_more
     - which, by side effect, fixes two outstanding bugs:

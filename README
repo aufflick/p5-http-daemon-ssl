@@ -1,7 +1,7 @@
 Quick note:
 
 I have just taken over maintenance of HTTP::Daemon::SSL. This
-developer release fixes (hopefully) various bugs:
+release fixes various bugs:
  * http://rt.cpan.org/Ticket/Display.html?id=28417
  * http://rt.cpan.org/Ticket/Display.html?id=21395
  * http://rt.cpan.org/Ticket/Display.html?id=15470
@@ -11,8 +11,12 @@ The todo list, in no particular order, is:
  * convert build system to Module::Build
  * change tests to use Test::More
  * improve test cases
- * update docs to reflect changes (include example of how to fix any
-   code relying on the old behaviour).
+
+Latest versions are available on CPAN. My subversion repository is
+also available:
+
+  http://cvs.pumptheory.com/ (browse)
+  http://cvs.pumptheory.com/repos/ (repository)
 
 Mark Aufflick, <mark@aufflick.com>
 
