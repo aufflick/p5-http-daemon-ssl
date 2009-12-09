@@ -9,6 +9,10 @@ WriteMakefile(
   'NAME'	=> 'HTTP::Daemon::SSL',
   'VERSION_FROM' => 'SSL.pm',
   'DISTNAME' => 'HTTP-Daemon-SSL',
-  'PREREQ_PM' => { 'HTTP::Daemon' => 1.0, 'IO::Socket::SSL' => 0.93 },
+  'PREREQ_PM' => {
+      'HTTP::Daemon' => 1.0,
+      'IO::Socket::SSL' => 0.93,
+      'Test::More' => 0,
+     },
   'dist' => { COMPRESS => 'gzip', SUFFIX => 'gz', },
 );

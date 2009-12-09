@@ -72,7 +72,7 @@ use vars qw($VERSION @ISA $PROTO $DEBUG);
 use IO::Socket::SSL;
 use HTTP::Daemon;
 
-$VERSION = "1.04";
+$VERSION = "1.05";
 @ISA = qw(IO::Socket::SSL HTTP::Daemon);
 
 =item $d = new HTTP::Daemon::SSL
@@ -160,6 +160,16 @@ use vars qw(@ISA $DEBUG);
 @ISA = qw(IO::Socket::SSL HTTP::Daemon::ClientConn);
 *DEBUG = \$HTTP::Daemon::DEBUG;
 
+
+=back
+
+=head1 BUGS
+
+There is a problem with the interaction between the L<HTTP::Daemon> base class and
+L<IO::Socket::SSL> buffering which causes large post or put actions (>66k or so,
+depending on your OS) to hang.
+
+See L<https://rt.cpan.org/Ticket/Display.html?id=52602>.
 
 =head1 SEE ALSO
 
