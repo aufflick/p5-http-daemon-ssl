@@ -52,8 +52,6 @@ unless (fork) {
         "posted small request",
        );
 
-  SKIP: {
-        skip 'HTTP::Daemon::SSL class hangs on large posts (> 66k or 37k - depends on OS). See https://rt.cpan.org/Ticket/Display.html?id=52602', 2;
         
         $mech->post_ok(
         "https://$SSL_SERVER_ADDR:$SSL_SERVER_PORT/",
@@ -72,7 +70,7 @@ unless (fork) {
         { data => $data500k },
         "posted 500k request",
        );
-    }
+
         
     exit(0);
 }
@@ -90,9 +88,6 @@ $conn->send_response("bar");
 
 close $conn;
 
-SKIP: {
-    skip 'HTTP::Daemon::SSL class hangs on large posts (> 66k or 37k - depends on OS). See https://rt.cpan.org/Ticket/Display.html?id=52602', 9;
-    
     # sink second request
     ok(($conn = $server->accept), "accepted second 66k post");
     ok(($r = $conn->get_request), "got request object");
@@ -117,7 +112,7 @@ SKIP: {
     $conn->send_response("bar");
     close $conn;
 
-}
+
 wait;
 
 # count child tests

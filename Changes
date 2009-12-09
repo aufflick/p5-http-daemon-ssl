@@ -1,3 +1,14 @@
+v1.05_01
+    - dev release
+    - re-introducing _need_more to work around issue in base LWP
+      http://rt.cpan.org/Ticket/Display.html?id=45625
+    - will need further testing on the two bugs below which were
+      resolved by removing it (or hopefully the base issue will
+      be resolved)
+    - also resolved:
+      http://rt.cpan.org/Ticket/Display.html?id=46038
+      http://rt.cpan.org/Ticket/Display.html?id=45153
+
 v1.04
     - production release
     - only documentation and text file changes from 1.03_02
