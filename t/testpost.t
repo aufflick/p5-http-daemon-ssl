@@ -13,6 +13,9 @@ plan skip_all => "Test::WWW::Mechanize required for POST test" if $@;
 eval "use Test::Builder;";
 plan skip_all => "Test::Builder based Test::More version required for POST test" if $@;
 
+eval "use LWP::Protocol::https;";
+plan skip_all => "LWP::Protocol::https required for POST test" if $@;
+
 require $FindBin::Bin . "/ssl_settings.req";
 
 plan tests => 19;
@@ -28,6 +31,7 @@ my $server = new HTTP::Daemon::SSL(
 				   ReuseAddr => 1,
 				   SSL_verify_mode => 0x00,
 				   SSL_ca_file => "certs/test-ca.pem",
+				   SSL_key_file => "certs/server-key.pem",
 				   SSL_cert_file => "certs/server-cert.pem");
 
 ok($server, "made test server");

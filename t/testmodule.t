@@ -5,8 +5,11 @@
 use HTTP::Daemon::SSL;
 use HTTP::Status;
 use IO::Socket::SSL::Utils;
-eval {require "t/ssl_settings.req";} ||
-eval {require "ssl_settings.req";};
+use FindBin;
+eval {require "$FindBin::Bin/ssl_settings.req";} ||
+eval {require "$FindBin::Bin/../ssl_settings.req";};
+$SSL_SERVER_ADDR ||= '127.0.0.1';
+$SSL_SERVER_PORT ||= 0;
 
 $numtests = 14;
 $|=1;
@@ -28,7 +31,6 @@ my $server = new HTTP::Daemon::SSL(
 				   Listen => 5,
 				   Timeout => 30,
 				   ReuseAddr => 1,
-				   SSL_cipher_list => 'ALLOW',
 				   SSL_verify_mode => 0x00,
                    SSL_ca_file => "certs/test-ca.pem",
 				   SSL_key_file => "certs/server-key.pem",                   
@@ -99,8 +101,7 @@ unless (fork) {
 
     $client = new IO::Socket::SSL(PeerAddr => $SSL_SERVER_ADDR,
 				  PeerPort => $SSL_SERVER_PORT,
-				  SSL_verify_mode => 0x01,
-				  SSL_ca_file => "certs/test-ca.pem");
+				  SSL_verify_mode => 0x00);
 
     $client || (print("not ok #client failure\n") && exit);
     &ok("client good connection test");
