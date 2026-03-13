@@ -7,8 +7,8 @@ use warnings;
 
 use vars qw/$SSL_SERVER_PORT $SSL_SERVER_ADDR/;
 
-eval "use Test::WWW::Mechanize;";
-plan skip_all => "Test::WWW::Mechanize required for POST test" if $@;
+eval "use WWW::Mechanize;";
+plan skip_all => "WWW::Mechanize required for POST test" if $@;
 
 eval "use Test::Builder;";
 plan skip_all => "Test::Builder based Test::More version required for POST test" if $@;
