@@ -13,6 +13,11 @@ WriteMakefile(
       'HTTP::Daemon' => 1.0,
       'IO::Socket::SSL' => 0.93,
       'Test::More' => 0,
-     },
+  },
+  'BUILD_REQUIRES' => {
+      'HTTP::Daemon' => 1.0,
+      'IO::Socket::SSL' => 0.93,
+      'IO::Socket::SSL::Utils' => 0,
+  },
   'dist' => { COMPRESS => 'gzip', SUFFIX => 'gz', },
 );

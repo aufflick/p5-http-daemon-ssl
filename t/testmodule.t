@@ -4,10 +4,14 @@
 
 use HTTP::Daemon::SSL;
 use HTTP::Status;
-eval {require "t/ssl_settings.req";} ||
-eval {require "ssl_settings.req";};
+use IO::Socket::SSL::Utils;
+use FindBin;
+eval {require "$FindBin::Bin/ssl_settings.req";} ||
+eval {require "$FindBin::Bin/../ssl_settings.req";};
+$SSL_SERVER_ADDR ||= '127.0.0.1';
+$SSL_SERVER_PORT ||= 0;
 
-$numtests = 9;
+$numtests = 14;
 $|=1;
 $SIG{PIPE}='IGNORE';
 
@@ -28,6 +32,8 @@ my $server = new HTTP::Daemon::SSL(
 				   Timeout => 30,
 				   ReuseAddr => 1,
 				   SSL_verify_mode => 0x00,
+                   SSL_ca_file => "certs/test-ca.pem",
+				   SSL_key_file => "certs/server-key.pem",                   
 				   SSL_ca_file => "certs/test-ca.pem",
 				   SSL_cert_file => "certs/server-cert.pem");
 
@@ -46,6 +52,41 @@ print "not " unless ($server->url =~ m!^https:!);
 &ok("server url test");
 
 
+my ($ca_cert, $ca_key) = CERT_create(
+    subject => { commonName => 'Dummy IO::Socket::SSL Certificate Authority' },
+    CA => 1,
+);
+(defined $ca_cert and defined $ca_key) || print 'not ';
+&ok('authority certificate generated');
+
+my ($server_cert, $server_key) = CERT_create(
+    subject => { commonName => 'IO::Socket::SSL Dummy Server Certificate' },
+    CA => 0,
+    issuer_cert => $ca_cert,
+    issuer_key => $ca_key,
+);
+(defined $server_cert and defined $server_key) || print 'not ';
+&ok('server certificate generated');
+
+eval { PEM_cert2file($ca_cert, 'certs/test-ca.pem') };
+(!$@ and -s 'certs/test-ca.pem') || print 'not ';
+&ok('authority certificate saved');
+
+PEM_cert2file($server_cert, 'certs/server-cert.pem');
+(!$@ and -s 'certs/server-cert.pem') || print 'not ';
+&ok('server certificate saved');
+
+PEM_key2file($server_key, 'certs/server-key.pem');
+(!$@ and -s 'certs/server-key.pem') || print 'not ';
+&ok('server key saved');
+
+# freeing fails now <https://bugzilla.redhat.com/show_bug.cgi?id=1097640>
+#CERT_free($ca_cert);
+#KEY_free($ca_key);
+#CERT_free($server_cert);
+#KEY_free($server_key);
+
+
 unless (fork) {
     close($server);
 
@@ -60,8 +101,7 @@ unless (fork) {
 
     $client = new IO::Socket::SSL(PeerAddr => $SSL_SERVER_ADDR,
 				  PeerPort => $SSL_SERVER_PORT,
-				  SSL_verify_mode => 0x01,
-				  SSL_ca_file => "certs/test-ca.pem");
+				  SSL_verify_mode => 0x00);
 
     $client || (print("not ok #client failure\n") && exit);
     &ok("client good connection test");
