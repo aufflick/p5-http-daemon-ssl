@@ -72,7 +72,7 @@ use vars qw($VERSION @ISA $PROTO $DEBUG);
 use IO::Socket::SSL;
 use HTTP::Daemon;
 
-$VERSION = "1.05_01";
+$VERSION = "1.05_02";
 @ISA = qw(IO::Socket::SSL HTTP::Daemon);
 
 =item $d = new HTTP::Daemon::SSL

@@ -1,3 +1,11 @@
+v1.05_02
+    - dev release
+    - numerous test issues resolved:
+      * #2 - applies the patch Debian uses to make the base tests pass
+      * rt 146478 tests work with modern versions of IO::Socket::SSL
+      * rt 88998 & rt 81932 install/test failures
+      * Fixes further certificate and test issues when running the optional tests.
+
 v1.05_01
     - dev release
     - re-introducing _need_more to work around issue in base LWP
